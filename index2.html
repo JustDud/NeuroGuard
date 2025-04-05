@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroGuard - Mood Check</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background-color: #1b1625;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      position: relative;
+    }
+
+    header {
+      position: absolute;
+      top: 20px;
+      left: 30px;
+      color: grey;
+      font-size: 1.2em;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: yellow;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    .icon-bar {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 1.2em;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .underline {
+      height: 4px;
+      width: 200px;
+      background-color: yellow;
+      margin: 0 auto 30px auto;
+    }
+
+    .instruction {
+      font-size: 0.8em;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 550px;
+      height: 240px;
+      border-radius: 10px;
+      padding: 15px;
+      font-family: inherit;
+      font-size: 1em;
+      border: 2px solid #356eff;
+      resize: none;
+      box-shadow: 0 0 10px #356eff44;
+    }
+
+    .submit-button {
+      margin-top: 30px;
+      padding: 14px 30px;
+      background-color: #ff0057;
+      color: white;
+      border: none;
+      font-weight: bold;
+      font-size: 1em;
+      cursor: pointer;
+      clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
+    }
+
+    .bottom-svg {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: auto;
+      z-index: 0;
+    }
+  </style>
+</head>
+<body>
+  <header>header</header>
+  <div class="top-bar">MONITORING</div>
+  <div class="icon-bar">&#x2699;</div>
+
+  <h1>How do you feel today?</h1>
+  <div class="underline"></div>
+
+  <div class="instruction">Make sure that your description is as detailed as possible</div>
+
+  <textarea id="feelInput" placeholder="Type text here..."></textarea>
+  <button class="submit-button" onclick="submitAnswer()">CONFIRM ANSWER</button>
+
+  <img class="bottom-svg" src="Group 18328.svg" alt="decorative yellow shape" />
+
+  <script>
+    function submitAnswer() {
+      const input = document.getElementById('feelInput').value.trim();
+      const wordCount = input.split(/\s+/).filter(word => word.length > 0).length;
+      if (wordCount >= 100) {
+        alert(`Please write fewer than 100 words. You currently have ${wordCount}.`);
+        return;
+      }
+      const userAnswer = input;
+      console.log("Saved answer:", userAnswer);
+      // You can now send userAnswer to your backend or store it as needed
+    }
+  </script>
+</body>
+</html>
