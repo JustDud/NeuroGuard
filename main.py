@@ -108,7 +108,7 @@ def main():
 
     # Launch the Flask app in a separate process
     print("Starting web interface...")
-    subprocess.Popen(["/usr/bin/python3", "Combination.py"])
+    subprocess.Popen(["/usr/bin/python3", "web_data_receiver.py"])
     sleep(2)  # wait briefly for Flask to start
 
     print("NeuroGuard is now monitoring new user input. Type Ctrl+C to stop.\n")
