@@ -1,3 +1,4 @@
+from flask import Flask, request, render_template
 import os
 import sqlite3
 os.system('cls')
@@ -6,62 +7,40 @@ connection = sqlite3.connect('User_Data.db')
 cursor = connection.cursor()
 
 def create_user_tables():
-
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS main (
+    CREATE TABLE IF NOT EXISTS data (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user TEXT NOT NULL UNIQUE,
-        password TEXT NOT NULL
+        user TEXT NOT NULL,
+        emotional_state INT,
+        sleep_duration_hours INT,
+        screen_time_minutes INT,
+        physical_activity_minutes INT,
+        hour INT,
+        weekday INT,
+        sunlight_hours INT,
+        safety INT,
+        daily_goal_progress INT,
+        previous_suggestion TEXT
     )
     ''')
-    
-    cursor.execute('''
-CREATE TABLE IF NOT EXISTS data (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
-    timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
-    emotional_state TEXT,
-    emotion_score REAL,
-    cognitive_load TEXT,
-    sleep_quality TEXT,
-    sleep_duration_hours REAL,
-    social_interaction INTEGER,
-    physical_activity_minutes REAL,
-    screen_time_minutes INTEGER,
-    environment_score REAL,
-    goal_progress_score REAL,
-    mood_trigger_notes TEXT,
-    suggestions_given TEXT,
-    FOREIGN KEY (user_id) REFERENCES main(user)
-)
-''')
-                  
+
 def View_Table(table):
     cursor.execute(f"SELECT * FROM {table}")
     for row in cursor.fetchall():
         print(", ".join(str(value) if value is not None else "NULL" for value in row))
 
 def Insert_Values(table, values):
-    try:
-        if table == 'main':
-            if len(values) != 2:
-                raise ValueError("Main table requires exactly 2 values (user, password)")
-            cursor.execute('''
-                INSERT INTO main (user, password)
-                VALUES (?, ?)
-            ''', values)
-            
-        elif table == 'data':
+    try:            
+        if table == 'data':
             if len(values) < 1:
-                raise ValueError("Data table requires at least user_id")
+                raise ValueError("Data table requires at least user")
             
-            columns = ['user_id'] + [
+            columns = ['user'] + [
                 col for col, val in zip([
-                    'emotional_state', 'emotion_score', 'cognitive_load',
-                    'sleep_quality', 'sleep_duration_hours', 'social_interaction',
-                    'physical_activity_minutes', 'screen_time_minutes',
-                    'environment_score', 'goal_progress_score', 'mood_trigger_notes',
-                    'suggestions_given'
+                    'emotional_state', 'sleep_duration_hours', 'screen_time_minutes', 
+                    'physical_activity_minutes', 'hour', 'weekday', 
+                    'sunlight_hours', 'safety', 'daily_goal_progress', 
+                    'previous_suggestion'
                 ], values[1:]) if val is not None
             ]
             
@@ -75,7 +54,7 @@ def Insert_Values(table, values):
             cursor.execute(query, params)
             
         else:
-            raise ValueError("Invalid table name. Use 'main' or 'data'")
+            raise ValueError("Invalid table name. Use 'data'")
             
         connection.commit()
         print(f"Data inserted into {table} successfully")
@@ -87,7 +66,9 @@ def Insert_Values(table, values):
         print(f"Error: {e}")
         connection.rollback()
 
-View_Table("main")
-View_Table("data")
+#View_Table("data")
 
-connection.close()
+#cursor.execute("DROP TABLE IF EXISTS data")
+#create_user_tables()
+#connection.commit()
+sconnection.close()
