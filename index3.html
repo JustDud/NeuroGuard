@@ -1,97 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>NeuroGuard - Input Details</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroGuard - Provide Details</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
-      padding: 0;
       font-family: 'Orbitron', sans-serif;
-      background-color: #231D28;
-      color: #ffffff;
-      min-height: 100vh;
+      background-color: #0f0f0f;
+      color: white;
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-panel {
+      width: 40%;
+      background-color: yellow;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-start;
-      position: relative;
+      justify-content: center;
+      padding: 20px;
     }
 
-    header {
-      position: absolute;
-      top: 20px;
-      left: 30px;
-      color: grey;
-      font-size: 1.2em;
-    }
-
-    .top-bar {
-      position: absolute;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: yellow;
-      font-size: 1.2em;
-      font-weight: bold;
-      text-shadow: 0 0 8px yellow;
-    }
-
-    .icon-bar {
-      position: absolute;
-      top: 20px;
-      right: 30px;
-      color: white;
-      font-size: 1.2em;
-    }
-
-    h1 {
-      font-size: 2.8em;
+    .left-panel h1 {
+      font-size: 3em;
       text-align: center;
-      margin: 100px 0 10px;
+      color: black;
     }
 
-    .underline {
-      height: 4px;
-      width: 300px;
-      background-color: yellow;
-      margin: 0 auto 40px auto;
+    .right-panel {
+      width: 60%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: #1a1a1a;
     }
 
     .form-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 20px;
-      padding: 0 50px;
-      max-width: 1100px;
-      margin-bottom: 40px;
     }
 
     .input-group {
       display: flex;
       flex-direction: column;
-      position: relative;
     }
 
-    .input-label {
-      font-size: 0.9em;
+    .input-group label {
       margin-bottom: 5px;
-    }
-
-    .input-box {
-      background: transparent;
-      border: 2px solid yellow;
-      color: #ff0057;
-      padding: 10px;
       font-size: 0.9em;
-      border-radius: 4px;
     }
 
-    .input-box:focus {
-      outline: none;
-      box-shadow: 0 0 10px yellow;
+    .input-group input {
+      background-color: transparent;
+      border: 1px solid yellow;
+      padding: 8px;
+      color: #ff0057;
+      font-size: 0.9em;
     }
 
     .input-footer {
@@ -99,90 +73,120 @@
       justify-content: space-between;
       font-size: 0.7em;
       color: #aaa;
-      margin-top: 4px;
+      margin-top: 2px;
+    }
+
+    .textarea-group {
+      margin-top: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 2px solid #356eff;
+      resize: none;
     }
 
     .submit-button {
-      margin-top: 20px;
-      padding: 14px 30px;
       background-color: #ff0057;
       color: white;
-      border: none;
       font-weight: bold;
+      padding: 14px 28px;
       font-size: 1em;
+      border: none;
+      margin-top: 20px;
       cursor: pointer;
       clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
-    }
-
-    .bottom-svg {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: auto;
-      z-index: 0;
+      align-self: flex-start;
     }
   </style>
 </head>
 <body>
-  <header>header</header>
-  <div class="top-bar">MONITORING</div>
-  <div class="icon-bar">&#x2699;</div>
+  <div class="left-panel">
+    <h1>PLEASE<br>PROVIDE<br>DETAILS</h1>
+  </div>
 
-  <h1>Please provide the details</h1>
-  <div class="underline"></div>
+  <div class="right-panel">
+    <div class="form-grid" id="input-fields"></div>
 
-  <form id="detailsForm" class="form-grid">
-    <script>
-      const fields = [
-        { name: "sunlight", label: "Sunlight Hours" },
-        { name: "safety", label: "Safety" },
-        { name: "sleep_duration", label: "Sleep Duration" },
-        { name: "sleep", label: "Sleep" },
-        { name: "screen_time", label: "Screen Time" },
-        { name: "activity", label: "Physical Activity" },
-        { name: "goals", label: "Goal Progression" },
-        { name: "weekday", label: "Weekday" }
-      ];
+    <div class="textarea-group">
+      <label for="feeling">Make sure that your description is as detailed as possible</label>
+      <textarea id="feeling" placeholder="How do you feel today?"></textarea>
+    </div>
 
-      window.onload = function () {
-        const form = document.getElementById("detailsForm");
-        fields.forEach(field => {
-          const group = document.createElement("div");
-          group.className = "input-group";
-
-          group.innerHTML = `
-            <label class="input-label">${field.label} *</label>
-            <input class="input-box" name="${field.name}" type="text" maxlength="60" oninput="updateCount(this)">
-            <div class="input-footer">
-              <span>Symbol Count</span>
-              <span class="input-count">0/60</span>
-            </div>
-          `;
-          form.appendChild(group);
-        });
-      }
-
-      function updateCount(input) {
-        const counter = input.parentElement.querySelector('.input-count');
-        counter.textContent = `${input.value.length}/60`;
-      }
-    </script>
-  </form>
-
-  <button class="submit-button" onclick="saveData()">CONFIRM ANSWER</button>
-  <img class="bottom-svg" src="Group 18328.svg" alt="decorative yellow shape" />
+    <button class="submit-button" onclick="submitAnswers()">CONFIRM ANSWER</button>
+  </div>
 
   <script>
-    function saveData() {
-      const form = document.getElementById('detailsForm');
-      const inputs = form.querySelectorAll('input');
-      const data = {};
-      inputs.forEach(input => {
-        data[input.name] = input.value;
-      });
-      console.log("Collected Data for Python Algorithm:", data);
-      // Send or store data object as needed
+    const fields = [
+      { name: "sleep_duration", label: "Sleep Duration" },
+      { name: "hour", label: "Hour" },
+      { name: "goals", label: "Goal Progression" },
+      { name: "weekday", label: "Weekday" },
+      { name: "sunlight", label: "Sunlight Hours" },
+      { name: "safety", label: "Safety" },
+      { name: "screen", label: "Screen Time" },
+      { name: "activity", label: "Physical Activity" }
+    ];
+
+    const formGrid = document.getElementById("input-fields");
+
+    fields.forEach(field => {
+      const group = document.createElement("div");
+      group.className = "input-group";
+      group.innerHTML = `
+        <label for="${field.name}">${field.label} *</label>
+        <input type="text" id="${field.name}" name="${field.name}" maxlength="60" oninput="updateSymbolCount(this)">
+        <div class="input-footer">
+          <span>Symbol Count</span>
+          <span class="symbol-count">0/60</span>
+        </div>
+      `;
+      formGrid.appendChild(group);
+    });
+
+    function updateSymbolCount(input) {
+      const counter = input.parentElement.querySelector(".symbol-count");
+      counter.textContent = `${input.value.length}/60`;
     }
+
+    function submitAnswers() {
+      const feelingText = document.getElementById("feeling").value;
+      const wordCount = feelingText.trim().split(/\s+/).filter(Boolean).length;
+      if (wordCount >= 100) {
+        alert(`Please write fewer than 100 words. You currently have ${wordCount}.`);
+        return;
+      }
+
+      const data = {};
+      fields.forEach(field => {
+        data[field.name] = document.getElementById(field.name).value;
+      });
+      data["feeling"] = feelingText;
+      console.log("Collected answers for Python algorithm:", data);
+      
+      fetch('/api/insert_data', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data)
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    alert('Data submitted successfully!');
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    alert('Error submitting data');
+  });
+}
+    
   </script>
 </body>
 </html>
