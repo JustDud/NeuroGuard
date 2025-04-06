@@ -54,24 +54,44 @@ def main():
         if retrain == "train":
             retrain_model()
 
-    user_data = {
-        "sunlight_hours": 12,
-        "safety": 75,
-        "sleep_duration_hours": 7.5,
-        "screen_time_minutes": 320,
-        "physical_activity_minutes": 45,
-        "daily_goal_progression": 80,
-        "hour": 14,
-        "weekday": 2
-    }
-    user_message = "I'm feeling like I can't focus on anything today."
+    # user_data = {"sunlight_hours": 6, "safety": 31, "sleep_duration_hours": 4.3, "screen_time_minutes": 447, "physical_activity_minutes": 35, "daily_goal_progression": 58, "hour": 8, "weekday": 1}
+    #
+    # user_message = "I'm feeling like I can't focus on anything today."
+    #
+    # mental_state = get_mental_state(user_data)
 
-    mental_state = get_mental_state(user_data)
+    test_inputs = [
+        {"sunlight_hours": 6, "safety": 31, "sleep_duration_hours": 4.3, "screen_time_minutes": 447,
+         "physical_activity_minutes": 35, "daily_goal_progression": 58, "hour": 8, "weekday": 1},
+        {"sunlight_hours": 10, "safety": 99, "sleep_duration_hours": 3.2, "screen_time_minutes": 443,
+         "physical_activity_minutes": 111, "daily_goal_progression": 89, "hour": 7, "weekday": 3},
+        {"sunlight_hours": 5, "safety": 47, "sleep_duration_hours": 9.1, "screen_time_minutes": 624,
+         "physical_activity_minutes": 97, "daily_goal_progression": 77, "hour": 8, "weekday": 4},
+        {"sunlight_hours": 7, "safety": 25, "sleep_duration_hours": 8.7, "screen_time_minutes": 608,
+         "physical_activity_minutes": 109, "daily_goal_progression": 67, "hour": 19, "weekday": 4},
+        {"sunlight_hours": 7, "safety": 78, "sleep_duration_hours": 8.9, "screen_time_minutes": 211,
+         "physical_activity_minutes": 89, "daily_goal_progression": 77, "hour": 12, "weekday": 5},
+        {"sunlight_hours": 5, "safety": 78, "sleep_duration_hours": 4.1, "screen_time_minutes": 782,
+         "physical_activity_minutes": 3, "daily_goal_progression": 83, "hour": 18, "weekday": 0},
+        {"sunlight_hours": 5, "safety": 58, "sleep_duration_hours": 8.4, "screen_time_minutes": 801,
+         "physical_activity_minutes": 69, "daily_goal_progression": 35, "hour": 4, "weekday": 1},
+        {"sunlight_hours": 2, "safety": 91, "sleep_duration_hours": 6.8, "screen_time_minutes": 841,
+         "physical_activity_minutes": 67, "daily_goal_progression": 63, "hour": 1, "weekday": 1},
+        {"sunlight_hours": 5, "safety": 51, "sleep_duration_hours": 9.0, "screen_time_minutes": 725,
+         "physical_activity_minutes": 93, "daily_goal_progression": 10, "hour": 17, "weekday": 4},
+        {"sunlight_hours": 5, "safety": 56, "sleep_duration_hours": 5.5, "screen_time_minutes": 354,
+         "physical_activity_minutes": 43, "daily_goal_progression": 70, "hour": 10, "weekday": 5}
+    ]
 
-    suggestions = generate_suggestions(user_message, mental_state, user_data)
-    print("\nHere are some suggestions for you:\n")
-    print(mental_state)
-    print(suggestions)
+
+    for i, input_data in enumerate(test_inputs, 1):
+        result = get_mental_state(input_data)
+        print(f"{i}. Predicted mental_state: {result}")
+
+    # suggestions = generate_suggestions(user_message, mental_state, user_data)
+    # print("\nHere are some suggestions for you:\n")
+    # print(mental_state)
+    # print(suggestions)
 
 
 if __name__ == "__main__":

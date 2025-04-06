@@ -1,8 +1,10 @@
 import os
+import json
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "trained_model.pkl")
 
 import pandas as pd
-from sample_data import sample_data
+with open("generated_sample_data.json", "r") as f:
+    sample_data = json.load(f)
 from sklearn.ensemble import RandomForestClassifier
 import joblib
 from sklearn.metrics import accuracy_score
@@ -12,14 +14,7 @@ df = pd.DataFrame(sample_data)
 # Map labels to numeric for training
 # Converts the list of dictionaries into a DataFrame,
 # a table-like structure used by pandas for easy data handling.
-df["emotion_label"] = [
-    2, 2, 3, 1, 3, 0, 3, 1, 2, 3,
-    0, 3, 1, 3, 0, 3, 0, 3, 0, 3,
-    3, 2, 3, 1, 3, 0, 3, 1, 2, 3,
-    1, 3, 1, 3, 0, 3, 0, 3, 0, 3,
-    3, 2, 3, 1, 3, 0, 3, 1, 2, 3,
-    1, 3, 1, 3, 0, 3, 0, 3, 0, 3
-]
+df["emotion_label"] = df["mental_state"]
 
 def prepare_data(df):
     features = [
@@ -53,6 +48,7 @@ def predict_emotion(model, input_dict):
     return prediction
 
 X, y = prepare_data(df)
+
 # model = train_model(X, y)
 
 # new_input_data = {
@@ -96,9 +92,14 @@ except FileNotFoundError:
 
 def get_mental_state(input_data):
     model = load_model()
+
+    # statistics
+    y_pred = model.predict(X)
+    accuracy = accuracy_score(y, y_pred)
+    print(f"Model accuracy on full dataset: {accuracy:.2f}")
+
     label = predict_emotion(model, input_data)
-    label_map = {0: "stressed", 1: "tired", 2: "neutral", 3: "happy"}
-    return label_map.get(label, "unknown")
+    return label
 
 
 # y_pred = model.predict(X)
