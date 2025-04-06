@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroGuard - Results</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      background: #121211 url(bg\ \(1\).svg);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: cover;
+    }
+
+    .results-container {
+      display: flex;
+      gap: 60px;
+      padding: 40px;
+      align-items: center;
+    }
+
+    .circle-container {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 10px solid #00ffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5em;
+      font-weight: bold;
+      color: #00ffff;
+      position: relative;
+      background: radial-gradient(circle, #001c1c 60%, transparent 61%);
+    }
+
+    .results-text {
+      max-width: 400px;
+    }
+
+    .results-text h2 {
+      color: yellow;
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+
+    .results-text p {
+      color: #FCEE0A;
+      font-size: 0.9em;
+      line-height: 1.5em;
+    }
+
+    .check-again-button {
+      background-color: #FF003C;
+      border: none;
+      color: white;
+      font-weight: bold;
+      padding: 12px 24px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 20px;
+      clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
+    }
+
+    .disclaimer {
+      font-size: 0.7em;
+      color: #ccc;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="results-container">
+    <div class="circle-container" id="result-percentage">
+      0%
+    </div>
+    
+    <div class="results-text">
+      <h2>YOUR RESULTS</h2>
+      <img src="Line Seperator (2).svg" alt="">
+      <p id="result-description">Loading your personalised analysis...</p>
+      <button class="check-again-button" onclick="window.location.href='1_mainPage.html'" style="font-family: Orbitron;">GO HOME</button>
+    </div>
+  </div>
+
+  <script>
+    // These values will be dynamically filled by your Python algorithm (injected from backend or API)
+    const pythonGeneratedPercentage = 79; // Example value
+    const pythonGeneratedDescription = "Cyberpunk 2077 is an open-world, action-adventure story set in Night City... (your custom description here).";
+
+    // Update UI with real values
+    document.getElementById("result-percentage").textContent = `${pythonGeneratedPercentage}%`;
+    document.getElementById("result-description").textContent = pythonGeneratedDescription;
+  </script>
+</body>
+</html>
