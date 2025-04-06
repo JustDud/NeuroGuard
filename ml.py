@@ -5,9 +5,10 @@ MODEL_PATH = os.path.join(os.path.dirname(__file__), "trained_model.pkl")
 import pandas as pd
 with open("generated_sample_data.json", "r") as f:
     sample_data = json.load(f)
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestRegressor
 import joblib
 from sklearn.metrics import accuracy_score
+from sklearn.model_selection import train_test_split
 # Load sample data
 df = pd.DataFrame(sample_data)
 
@@ -36,7 +37,7 @@ def prepare_data(df):
 # features when building each tree in the forest
 # (42 is common but can be changed)
 def train_model(X, y):
-    model = RandomForestClassifier(random_state=42)
+    model = RandomForestRegressor(random_state=42)
     model.fit(X, y)
     joblib.dump(model, MODEL_PATH)
     return model
@@ -45,9 +46,9 @@ def train_model(X, y):
 def predict_emotion(model, input_dict):
     input_df = pd.DataFrame([input_dict])
     prediction = model.predict(input_df)[0]
-    return prediction
+    return int(round(prediction))
 
-X, y = prepare_data(df)
+# X, y = prepare_data(df)
 
 # model = train_model(X, y)
 
@@ -86,17 +87,19 @@ def load_model():
 try:
     model = load_model()
 except FileNotFoundError:
-    model = train_model(X, y)
+    X, y = prepare_data(df)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    model = train_model(X_train, y_train)
     joblib.dump(model, MODEL_PATH)
+
+    # Evaluate on test set
+    y_pred = model.predict(X_test)
+    accuracy = accuracy_score(y_test, y_pred)
+    print(f"Validation accuracy: {accuracy:.2f}")
 
 
 def get_mental_state(input_data):
     model = load_model()
-
-    # statistics
-    y_pred = model.predict(X)
-    accuracy = accuracy_score(y, y_pred)
-    print(f"Model accuracy on full dataset: {accuracy:.2f}")
 
     label = predict_emotion(model, input_data)
     return label
