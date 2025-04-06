@@ -10,7 +10,7 @@ data = {}
 
 @app.route('/')
 def serve_html():
-    return send_from_directory('.', 'index3.html')
+    return send_from_directory('.', '1_mainPage.html')
 
 @app.route('/api/insert_data', methods=['POST'])
 def insert_data():
