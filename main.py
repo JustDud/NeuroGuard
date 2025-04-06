@@ -58,11 +58,11 @@ def update_latest_row(mental_state, summary_text):
 
 def generate_suggestions(user_message, mental_state, user_data, history_text=""):
     prompt = (
-        f"You are NeuroGuard, an AI wellness companion from the year 2080.\n"
-        f"The user has just submitted their lifestyle data.\n\n"
-        f"Your task is to offer helpful mental health guidance based on this data:\n"
+        f"You are NeuroGuard, an advanced mental wellness AI from the year 2080.\n"
+        f"Your top priority is to respond meaningfully to the user's emotional input.\n\n"
+        f"User's message (primary focus): \"{user_message}\"\n\n"
+        f"Contextual lifestyle data:\n"
         f"- Estimated mental state score: {mental_state}/100\n"
-        f"- Self-described feeling: \"{user_message}\"\n"
         f"- Weekday: {user_data.get('weekday')}\n"
         f"- Hours of sleep: {user_data.get('sleep_duration_hours')}h\n"
         f"- Screen time: {user_data.get('screen_time_minutes')} minutes\n"
@@ -74,12 +74,12 @@ def generate_suggestions(user_message, mental_state, user_data, history_text="")
 
     history_section = f"\n\nHere is the user's historical wellness advice:\n- {history_text}" if history_text else ""
     prompt += history_section + "\n\n" \
-              "Based on this mental state and the context, suggest exactly **three personalised tips** to help the user improve or stabilise their mental well-being.\n" \
-              "Each suggestion should be:\n" \
-              "- Calm, empathetic, and psychologically sound\n" \
-              "- Backed by behavioural science, mindfulness, or neuroscience\n" \
-              "- Focused on small, actionable steps the user can take immediately\n\n" \
-              "Format your response as a friendly, numbered list. Do not say hi, just give the suggestions. Use British Spelling."
+              "Based on the emotional input and context, offer exactly **three personalised tips** to help the user improve or stabilise their mental well-being.\n" \
+              "Each suggestion must be:\n" \
+              "- Psychologically sound and empathetic\n" \
+              "- Inspired by mindfulness, behavioural science, or neuroscience\n" \
+              "- Practical, concise, and immediately useful\n\n" \
+              "Respond with a numbered list. Avoid greetings, introductions, or summaries. Use British spelling."
 
     headers = {"Content-Type": "application/json"}
     data = {
