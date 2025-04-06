@@ -1,6 +1,19 @@
 import os
 import json
+import sqlite3
+from time import sleep
 MODEL_PATH = os.path.join(os.path.dirname(__file__), "trained_model.pkl")
+
+FEATURE_COLUMNS = [
+    "sunlight_hours",
+    "safety",
+    "sleep_duration_hours",
+    "screen_time_minutes",
+    "physical_activity_minutes",
+    "daily_goal_progression",
+    "hour",
+    "weekday"
+]
 
 import pandas as pd
 with open("generated_sample_data.json", "r") as f:
@@ -18,17 +31,7 @@ df = pd.DataFrame(sample_data)
 df["emotion_label"] = df["mental_state"]
 
 def prepare_data(df):
-    features = [
-        "sunlight_hours",
-        "safety",
-        "sleep_duration_hours",
-        "screen_time_minutes",
-        "physical_activity_minutes",
-        "daily_goal_progression",
-        "hour",
-        "weekday",
-    ]
-    X = df[features]
+    X = df[FEATURE_COLUMNS]
     y = df["emotion_label"]
     return X, y
 
@@ -45,6 +48,7 @@ def train_model(X, y):
 
 def predict_emotion(model, input_dict):
     input_df = pd.DataFrame([input_dict])
+    input_df = input_df[FEATURE_COLUMNS]  # Ensure correct column order
     prediction = model.predict(input_df)[0]
     return int(round(prediction))
 
@@ -107,3 +111,7 @@ def get_mental_state(input_data):
 
 # y_pred = model.predict(X)
 # accuracy = accuracy_score(y, y_pred)
+
+print("NeuroGuard is now monitoring new user input. Type Ctrl+C to stop.\n")
+last_seen_id = None
+

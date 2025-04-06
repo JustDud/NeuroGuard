@@ -68,12 +68,25 @@ def Insert_Values(table, values):
     except Exception as e:
         print(f"Error: {e}")
 
-def View_Table(table):
-    with sqlite3.connect('User_Data.db') as conn:
+def get_latest_user_data():
+    with sqlite3.connect("User_Data.db") as conn:
         cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM {table}")
-        for row in cursor.fetchall():
-            print(", ".join(str(value) if value is not None else "NULL" for value in row))
+        cursor.execute("SELECT * FROM data ORDER BY id DESC LIMIT 1")
+        row = cursor.fetchone()
+        if not row:
+            return None
+        # Map row to expected dictionary keys for get_mental_state
+        return {
+            "sleep_duration_hours": float(row[3]) if row[3] is not None else 0,
+            "screen_time_minutes": int(row[4]) if row[4] is not None else 0,
+            "physical_activity_minutes": int(row[5]) if row[5] is not None else 0,
+            "hour": int(row[6]) if row[6] is not None else 0,
+            "weekday": int(row[7]) if row[7] is not None else 0,
+            "sunlight_hours": int(row[8]) if row[8] is not None else 0,
+            "safety": int(row[9]) if row[9] is not None else 0,
+            "daily_goal_progression": int(row[10]) if row[10] is not None else 0
+        }
 
 
-View_Table("data")
+# create_user_tables()
+# View_Table("data")
