@@ -28,7 +28,7 @@
 
     .left-panel {
       width: 40%;
-      background: #FFFF00 url(images/leftPanelInput.svg) center/cover no-repeat;
+      background: #FFFF00 url('{{ url_for('static', filename='images/leftPanelInput.svg') }}') center/cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -112,6 +112,12 @@
       clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
       align-self: flex-start;
     }
+
+    .submit-button a{
+      font-family: 'Orbitron', sans-serif;
+      text-decoration: none;
+      color: white;
+    }
   </style>
 </head>
 <body>
@@ -127,13 +133,13 @@
       <textarea id="feeling" placeholder="Make sure that your description is as detailed as possible"></textarea>
     </div>
 
-    <button class="submit-button" onclick="submitAnswers(), window.location.href='3_ResultPage.html'" style="font-family: Orbitron;">CONFIRM ANSWER</button>
+    <button class="submit-button" onclick="submitAnswers()"><a href="{{url_for('results_page')}}">CONFIRM ANSWER</a></button>
   </div>
 
   <script>
     const fields = [
       { name: "sleep_duration", label: "Sleep Duration" },
-      { name: "sleep", label: "Sleep" },
+      { name: "hours", label: "Hours" },
       { name: "goals", label: "Goal Progression" },
       { name: "weekday", label: "Weekday" },
       { name: "sunlight", label: "Sunlight Hours" },
@@ -176,8 +182,22 @@
         data[field.name] = document.getElementById(field.name).value;
       });
       data["feeling"] = feelingText;
-      console.log("Collected answers for Python algorithm:", data);
-      // Send 'data' to your backend as needed
+
+      // Отправляем данные на сервер
+      fetch("/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if (response.ok) {
+          window.location.href = "/results";
+        } else {
+          alert("Submission failed.");
+        }
+      });
     }
   </script>
 </body>

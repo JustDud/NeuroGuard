@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, render_template
 import os
 from SQLfile import Insert_Values, create_user_tables
 
@@ -6,11 +6,9 @@ app = Flask(__name__)
 
 data = {}
 
-
-
 @app.route('/')
 def serve_html():
-    return send_from_directory('.', '1_mainPage.html')
+    return render_template('1_mainPage.html')
 
 @app.route('/api/insert_data', methods=['POST'])
 def insert_data():
@@ -48,4 +46,3 @@ def show_data():
 
 if __name__ == '__main__':
     create_user_tables()
-    app.run(debug=True, port=4000)

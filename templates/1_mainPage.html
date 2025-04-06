@@ -46,7 +46,7 @@
       justify-content: flex-end;
       align-items: center;
       padding-left: 2rem;
-      background: #121211 url(images/landing.svg) center/cover no-repeat;
+      background: #121211 url('{{ url_for('static', filename='images/landing.svg') }}') center/cover no-repeat;
       position: relative;
       text-align: left;
       animation: fadeIn 2s ease-in;
@@ -69,16 +69,16 @@
       color: black;
     }
     .section-yellow {
-      
+
       color: black;
       padding: 4rem 2rem;
       animation: slideUp 1s ease-out;
     }
     .yellow_1{
-        background:#FCEE0A url(images/yellowback.svg) center/cover no-repeat;
+        background:#FCEE0A url('{{ url_for('static', filename='images/yellowback.svg') }}') center/cover no-repeat;
     }
     .yellow_2{
-        background:#FCEE0A url(images/yellow_bg_elements.svg) center/cover no-repeat !important;
+        background:#FCEE0A url('{{ url_for('static', filename='images/yellow_bg_elements.svg') }}') center/cover no-repeat !important;
     }
 
     .features {
@@ -107,7 +107,7 @@
       }
     }
     .section-black {
-      background: #121211  url(images/bg.svg) center/cover no-repeat;  
+      background: #121211  url('{{ url_for('static', filename='images/bg.svg') }}') center/cover no-repeat;
       height: 100vh;
       padding: 4rem 2rem;
       display: flex;
@@ -181,25 +181,25 @@
 
   <section class="hero">
     <div class="hero-text" style="text-align: center; padding-bottom: 8rem;">
-        <div class="hero_button" style="display: flex; background-image: url(images/Subtract.svg); background-repeat: no-repeat; background-position: center;">
-            <a href="2_InputPage.html">Check Yourself</a>
+        <div class="hero_button" style="display: flex; background-image: url('{{ url_for('static', filename='images/Subtract.svg') }}'); background-repeat: no-repeat; background-position: center;">
+            <a href="{{ url_for('input_page') }}">Check Yourself</a>
         </div>
         <p style="margin-top: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.875rem;">Monitor your mental health</p>
     </div>
   </section>
 
   <section class="section-yellow yellow_1" id="check">
-    <h1 style="font-weight: 900; text-align: left; font-family: Oswald; text-transform: uppercase; font-size: 6rem;">Welcome to NeuroGuard</h2>
+    <h1 style="font-weight: 900; text-align: left; font-family: Oswald; text-transform: uppercase; font-size: 6rem;">Welcome to NeuroGuard</h1>
     <div class="section-yellow-info" style="display: flex;">
         <div class="section-yellow-info-text">
             <h3 style="font-size: 1.25rem; font-weight: 600; text-align: left; text-transform: uppercase;">Night City Changes Every Mind</h3>
-            <img src="images/Line_Seperator_1.svg" alt="" style="transform: translateY(-20px);">
+            <img src="{{ url_for('static', filename='images/Line_Seperator_1.svg') }}" alt="" style="transform: translateY(-20px);">
             <p style="text-align: left; max-width: 800px; margin-bottom: 2rem;">
               In the world of 2080, people are constantly bombarded by neural input – ads beamed into your brain, implants hijacking your senses, braindance loops that overload emotion. This leads to <strong>cyberpsychosis</strong>, burnout, and identity fragmentation.
             </p>
-            <img src="images/Line_Seperator.svg" alt="">
+            <img src="{{ url_for('static', filename='images/Line_Seperator.svg') }}" alt="">
         </div>
-        <img src="images/Subtract_1.svg" alt="Night City">
+        <img src="{{ url_for('static', filename='images/Subtract_1.svg') }}" alt="Night City">
     </div>
   </section>
 
@@ -207,27 +207,27 @@
     <h2 style="font-size: 6rem;font-weight: 900;text-align: left;text-transform: uppercase;font-family: 'Oswald';color: #FF003C; margin: 0; ">We Check Your</h2>
     <div class="features">
       <div class="card">
-        <img src="images/01.svg" alt="">
+        <img src="{{ url_for('static', filename='images/01.svg') }}" alt="">
       </div>
       <div class="card">
-        <img src="images/02_1.svg" alt="">
+        <img src="{{ url_for('static', filename='images/02_1.svg') }}" alt="">
       </div>
       <div class="card">
-        <img src="images/03.svg" alt="">
+        <img src="{{ url_for('static', filename='images/03.svg') }}" alt="">
       </div>
     </div>
   </section>
 
   <section class="section-black">
-    <img src="images/biochip.svg" alt="Biochip">
+    <img src="{{ url_for('static', filename='images/biochip.svg') }}" alt="Biochip">
     <div class="biochip-text">
         <h3>For All Biochips</h3>
-        <img src="images/Line_Seperator_2.svg" alt="">
+        <img src="{{ url_for('static', filename='images/Line_Seperator_2.svg') }}" alt="">
         <p style="color: #faff00; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">
             NeuroGuard is compatible with a wide range of biochips, allowing users to seamlessly connect their devices for real-time mental and physical health monitoring. Whether you're using popular commercial chips or custom implants, our system ensures smooth integration, accurate data tracking, and enhanced personal insights. With universal accessibility in mind, NeuroGuard bridges your biochip and our platform to deliver a powerful, connected experience.
         </p>
-        <div class="hero_button" style="display: flex; max-width: 300px; background-image: url(images/Subtract.svg); background-repeat: no-repeat; background-position: center;">
-          <a href="2_InputPage.html">Check Yourself</a>
+        <div class="hero_button" style="display: flex; max-width: 300px; background-image: url('{{ url_for('static', filename='images/Subtract.svg') }}'); background-repeat: no-repeat; background-position: center;">
+          <a href="{{ url_for('input_page') }}">Check Yourself</a>
         </div>
     </div>
   </section>

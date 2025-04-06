@@ -10,8 +10,7 @@
       margin: 0;
       padding: 0;
       font-family: 'Orbitron', sans-serif;
-      background: #121211 url(images/bgResult.svg);
-      color: #ffffff;
+      background: #121211 url('{{ url_for('static', filename='images/bgResult.svg') }}');      color: #ffffff;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -79,25 +78,33 @@
 <body>
   <div class="results-container">
     <div class="circle-container" id="result-percentage">
-      0%
+      {{ value1 }}%
     </div>
-    
+
     <div class="results-text">
       <h2>YOUR RESULTS</h2>
-      <img src="images/Line_Seperator_2.svg" alt="">
-      <p id="result-description">Loading your personalised analysis...</p>
-      <button class="check-again-button" onclick="window.location.href='1_mainPage.html'" style="font-family: Orbitron;">GO HOME</button>
+      <img src="{{ url_for('static', filename='images/Line_Seperator_2.svg') }}" alt="">
+      <p id="result-description">{{ value2 }}</p>
+      <button class="check-again-button" onclick="window.location.href='{{ url_for('home') }}'" style="font-family: Orbitron;">GO HOME</button>
     </div>
   </div>
 
   <script>
-    // These values will be dynamically filled by your Python algorithm (injected from backend or API)
-    const pythonGeneratedPercentage = 79; // Example value
-    const pythonGeneratedDescription = "Cyberpunk 2077 is an open-world, action-adventure story set in Night City... (your custom description here).";
+  const predictedState = Number(`{{ value1 }}`) || 0;
+    const suggestion = `{{ value2 | safe }}`;
 
-    // Update UI with real values
-    document.getElementById("result-percentage").textContent = `${pythonGeneratedPercentage}%`;
-    document.getElementById("result-description").textContent = pythonGeneratedDescription;
+    document.getElementById("result-percentage").textContent = `${predictedState}%`;
+    document.getElementById("result-description").textContent = suggestion;
+</script>
+  <script>
+    const predictedState = Number(`{{ value1 }}`) || 0;
+    const suggestion = `{{ value2 | safe }}`;
+
+    if (predictedState === 0 && suggestion === "Loading your personalised analysis...") {
+      setTimeout(() => {
+        location.reload();
+      }, 2000); // Retry after 2 seconds
+    }
   </script>
 </body>
 </html>

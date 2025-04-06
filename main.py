@@ -5,14 +5,106 @@ from ml_model import get_mental_state, retrain_model, MODEL_PATH
 import sqlite3
 import subprocess
 from time import sleep
-from flask import Flask, render_template
+import time
+from flask import Flask, render_template, url_for, request, session, redirect
 
 load_dotenv()
 app = Flask(__name__)
+app.secret_key = "supersecretkey"
+
+# Global state (top-level, just below load_dotenv())
+latest_predicted_state = 0
+latest_suggestion_text = "Loading your personalised analysis..."
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={GEMINI_API_KEY}"
 
+
+@app.route('/')
+def home():
+    return render_template("1_mainPage.html")
+
+@app.route('/input')
+def input_page():
+    return render_template("2_InputPage.html")
+
+@app.route('/results')
+def results_page():
+    return render_template("3_ResultPage.html", value1=latest_predicted_state, value2=latest_suggestion_text)
+
+
+
+
+@app.route('/submit', methods=['POST'])
+def handle_submission():
+    global latest_predicted_state, latest_suggestion_text
+    data = request.get_json()
+
+    print("Received submission:", data)
+
+    with sqlite3.connect("User_Data.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("""
+            INSERT INTO data (
+                user, emotional_state, sunlight_hours, safety, sleep_duration_hours,
+                screen_time_minutes, physical_activity_minutes, hour, weekday
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            "default_user",
+            None,
+            data.get("sunlight"),
+            data.get("safety"),
+            data.get("sleep_duration"),
+            data.get("screen"),
+            data.get("activity"),
+            data.get("hour"),
+            data.get("weekday")
+        ))
+        conn.commit()
+
+    latest_data = {
+        "sleep_duration_hours": float(data.get("sleep_duration", 0)),
+        "screen_time_minutes": int(data.get("screen", 0)),
+        "physical_activity_minutes": int(data.get("activity", 0)),
+        "hour": int(data.get("hours", 0)),
+        "weekday": int(data.get("weekday", 0)),
+        "sunlight_hours": int(data.get("sunlight", 0)),
+        "safety": int(data.get("safety", 0)),
+        "daily_goal_progression": int(data.get("goals", 0))
+    }
+
+    if latest_data:
+        predicted_state = get_mental_state(latest_data)
+        suggestion_text = generate_suggestions("No message provided", predicted_state, latest_data)
+
+        # Store for result page
+        latest_predicted_state = predicted_state
+        latest_suggestion_text = suggestion_text
+
+        # Generate summary
+        summary_prompt = (
+            f"As NeuroGuard, summarise the following AI mental wellness advice into one short paragraph "
+            f"that can be stored as historical context for future use:\n\n{suggestion_text}\n"
+            "Only return the summary without any intro or title."
+        )
+
+        summary_response = requests.post(
+            GEMINI_API_URL,
+            headers={"Content-Type": "application/json"},
+            json={"contents": [{"parts": [{"text": summary_prompt}]}]}
+        )
+
+        if summary_response.status_code == 200:
+            summary_result = summary_response.json()
+            summary_text = summary_result['candidates'][0]['content']['parts'][0]['text']
+        else:
+            summary_text = "Summary generation failed."
+
+        update_latest_row(predicted_state, summary_text)
+
+    print("Passing to results page:", latest_predicted_state, latest_suggestion_text)
+    # time.sleep(4)
+    return redirect(url_for('results_page', predicted=latest_predicted_state, suggestion=latest_suggestion_text))
 
 def get_full_history():
     with sqlite3.connect("User_Data.db") as conn:
@@ -38,7 +130,7 @@ def get_latest_user_data():
             "weekday": int(row[7]) if row[7] is not None else 0,
             "sunlight_hours": int(row[8]) if row[8] is not None else 0,
             "safety": int(row[9]) if row[9] is not None else 0,
-            "daily_goal_progression": int(row[10]) if row[10] is not None else 0
+            "daily_goal_progression": 50  # Placeholder to satisfy expected columns
         }
 
 
@@ -67,7 +159,6 @@ def generate_suggestions(user_message, mental_state, user_data, history_text="")
         f"- Hours of sleep: {user_data.get('sleep_duration_hours')}h\n"
         f"- Screen time: {user_data.get('screen_time_minutes')} minutes\n"
         f"- Physical activity: {user_data.get('physical_activity_minutes')} minutes\n"
-        f"- Goal progress: {user_data.get('daily_goal_progression')}%\n"
         f"- Safety perception: {user_data.get('safety')}/100\n"
         f"- Sunlight exposure: {user_data.get('sunlight_hours')} hours\n"
     )
@@ -108,7 +199,7 @@ def main():
 
     # Launch the Flask app in a separate process
     print("Starting web interface...")
-    subprocess.Popen(["/usr/bin/python3", "web_data_receiver.py"])
+    # subprocess.Popen(["/usr/bin/python3", "web_data_receiver.py"])
     sleep(2)  # wait briefly for Flask to start
 
     print("NeuroGuard is now monitoring new user input. Type Ctrl+C to stop.\n")
@@ -134,11 +225,6 @@ def main():
                 suggestion_text = generate_suggestions("No message provided", predicted_state, latest_data, history_text)
                 print("AI Suggestions:\n", suggestion_text)
 
-                @app.route('/')
-                def index():
-                    input1 = predicted_state
-                    input2 = suggestion_text
-                    return render_template('3_ResultPage.html', value1=input1, value2=input2)
 
                 # Generate a concise summary of today's suggestion
                 summary_prompt = (
@@ -177,5 +263,11 @@ def main():
                 last_seen_id = current_id
             sleep(2)
 
+def run_flask():
+    app.run(debug=True, port=4000, use_reloader=False)
+
 if __name__ == "__main__":
+    from multiprocessing import Process
+    flask_process = Process(target=run_flask)
+    flask_process.start()
     main()
