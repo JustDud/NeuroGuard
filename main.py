@@ -138,7 +138,7 @@ def main():
                 def index():
                     input1 = predicted_state
                     input2 = suggestion_text
-                    return render_template('plug.html', value1=input1, value2=input2)
+                    return render_template('index4.html', value1=input1, value2=input2)
 
                 # Generate a concise summary of today's suggestion
                 summary_prompt = (
