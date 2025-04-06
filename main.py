@@ -12,6 +12,14 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={GEMINI_API_KEY}"
 
 
+def get_full_history():
+    with sqlite3.connect("User_Data.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT previous_suggestion FROM data WHERE previous_suggestion IS NOT NULL")
+        rows = cursor.fetchall()
+        return "\n- ".join([row[0] for row in rows if row[0]])
+
+
 def get_latest_user_data():
     with sqlite3.connect("User_Data.db") as conn:
         cursor = conn.cursor()
@@ -32,8 +40,21 @@ def get_latest_user_data():
         }
 
 
+def update_latest_row(mental_state, summary_text):
+    with sqlite3.connect("User_Data.db") as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT id FROM data ORDER BY id DESC LIMIT 1")
+        row = cursor.fetchone()
+        if row:
+            latest_id = row[0]
+            cursor.execute(
+                "UPDATE data SET emotional_state = ?, previous_suggestion = ? WHERE id = ?",
+                (mental_state, summary_text.strip(), latest_id)
+            )
+            conn.commit()
 
-def generate_suggestions(user_message, mental_state, user_data):
+
+def generate_suggestions(user_message, mental_state, user_data, history_text=""):
     prompt = (
         f"You are NeuroGuard, an AI wellness companion from the year 2080.\n"
         f"The user has just submitted their lifestyle data.\n\n"
@@ -46,14 +67,17 @@ def generate_suggestions(user_message, mental_state, user_data):
         f"- Physical activity: {user_data.get('physical_activity_minutes')} minutes\n"
         f"- Goal progress: {user_data.get('daily_goal_progression')}%\n"
         f"- Safety perception: {user_data.get('safety')}/100\n"
-        f"- Sunlight exposure: {user_data.get('sunlight_hours')} hours\n\n"
-        "Based on this mental state and the context, suggest exactly **three personalised tips** to help the user improve or stabilise their mental well-being.\n"
-        "Each suggestion should be:\n"
-        "- Calm, empathetic, and psychologically sound\n"
-        "- Backed by behavioural science, mindfulness, or neuroscience\n"
-        "- Focused on small, actionable steps the user can take immediately\n\n"
-        "Format your response as a friendly, numbered list. Do not say hi, just give the suggestions"
+        f"- Sunlight exposure: {user_data.get('sunlight_hours')} hours\n"
     )
+
+    history_section = f"\n\nHere is the user's historical wellness advice:\n- {history_text}" if history_text else ""
+    prompt += history_section + "\n\n" \
+              "Based on this mental state and the context, suggest exactly **three personalised tips** to help the user improve or stabilise their mental well-being.\n" \
+              "Each suggestion should be:\n" \
+              "- Calm, empathetic, and psychologically sound\n" \
+              "- Backed by behavioural science, mindfulness, or neuroscience\n" \
+              "- Focused on small, actionable steps the user can take immediately\n\n" \
+              "Format your response as a friendly, numbered list. Do not say hi, just give the suggestions. Use British Spelling."
 
     headers = {"Content-Type": "application/json"}
     data = {
@@ -80,7 +104,6 @@ def main():
         if retrain == "train":
             retrain_model()
 
-
     # Launch the Flask app in a separate process
     print("Starting web interface...")
     subprocess.Popen(["/usr/bin/python3", "Combination.py"])
@@ -105,8 +128,44 @@ def main():
                 print("Latest user data from DB:", latest_data)
                 predicted_state = get_mental_state(latest_data)
                 print("Predicted mental_state:", predicted_state)
-                suggestion_text = generate_suggestions("No message provided", predicted_state, latest_data)
+                history_text = get_full_history()
+                suggestion_text = generate_suggestions("No message provided", predicted_state, latest_data, history_text)
                 print("AI Suggestions:\n", suggestion_text)
+
+                # Generate a concise summary of today's suggestion
+                summary_prompt = (
+                    f"As NeuroGuard, summarise the following AI mental wellness advice into one short paragraph "
+                    f"that can be stored as historical context for future use:\n\n{suggestion_text}\n"
+                    "Only return the summary without any intro or title."
+                )
+
+                summary_response = requests.post(
+                    GEMINI_API_URL,
+                    headers={"Content-Type": "application/json"},
+                    json={"contents": [{"parts": [{"text": summary_prompt}]}]}
+                )
+
+                if summary_response.status_code == 200:
+                    summary_result = summary_response.json()
+                    summary_text = summary_result['candidates'][0]['content']['parts'][0]['text']
+                else:
+                    summary_text = "Summary generation failed."
+
+                # Update the row
+                update_latest_row(predicted_state, summary_text)
+
+                # Print the summary
+                print("Summary stored in history:")
+                print(summary_text)
+
+                # Display full table
+                print("\nCurrent data table:")
+                with sqlite3.connect("User_Data.db") as conn:
+                    cursor = conn.cursor()
+                    cursor.execute("SELECT * FROM data")
+                    for row in cursor.fetchall():
+                        print(row)
+
                 last_seen_id = current_id
             sleep(2)
 
