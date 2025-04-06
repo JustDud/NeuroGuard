@@ -1,4 +1,3 @@
-from flask import Flask, request, render_template
 import os
 import sqlite3
 os.system('cls')
@@ -71,4 +70,4 @@ def Insert_Values(table, values):
 #cursor.execute("DROP TABLE IF EXISTS data")
 #create_user_tables()
 #connection.commit()
-sconnection.close()
+connection.close()
