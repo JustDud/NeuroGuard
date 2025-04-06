@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroGuard - Provide Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background-color: #0f0f0f;
+      color: white;
+      display: flex;
+      height: 100vh;
+    }
+
+    .left-panel {
+      width: 40%;
+      background-color: yellow;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .left-panel h1 {
+      font-size: 3em;
+      text-align: center;
+      color: black;
+    }
+
+    .right-panel {
+      width: 60%;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      background-color: #1a1a1a;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-group label {
+      margin-bottom: 5px;
+      font-size: 0.9em;
+    }
+
+    .input-group input {
+      background-color: transparent;
+      border: 1px solid yellow;
+      padding: 8px;
+      color: #ff0057;
+      font-size: 0.9em;
+    }
+
+    .input-footer {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.7em;
+      color: #aaa;
+      margin-top: 2px;
+    }
+
+    .textarea-group {
+      margin-top: 20px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 2px solid #356eff;
+      resize: none;
+    }
+
+    .submit-button {
+      background-color: #ff0057;
+      color: white;
+      font-weight: bold;
+      padding: 14px 28px;
+      font-size: 1em;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+      clip-path: polygon(0 0, 100% 0, 100% 80%, 95% 100%, 0 100%);
+      align-self: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <div class="left-panel">
+    <h1>PLEASE<br>PROVIDE<br>DETAILS</h1>
+  </div>
+
+  <div class="right-panel">
+    <div class="form-grid" id="input-fields"></div>
+
+    <div class="textarea-group">
+      <label for="feeling">Make sure that your description is as detailed as possible</label>
+      <textarea id="feeling" placeholder="How do you feel today?"></textarea>
+    </div>
+
+    <button class="submit-button" onclick="submitAnswers()">CONFIRM ANSWER</button>
+  </div>
+
+  <script>
+    const fields = [
+      { name: "sleep_duration", label: "Sleep Duration" },
+      { name: "sleep", label: "Sleep" },
+      { name: "goals", label: "Goal Progression" },
+      { name: "weekday", label: "Weekday" },
+      { name: "sunlight", label: "Sunlight Hours" },
+      { name: "safety", label: "Safety" },
+      { name: "screen", label: "Screen Time" },
+      { name: "activity", label: "Physical Activity" }
+    ];
+
+    const formGrid = document.getElementById("input-fields");
+
+    fields.forEach(field => {
+      const group = document.createElement("div");
+      group.className = "input-group";
+      group.innerHTML = `
+        <label for="${field.name}">${field.label} *</label>
+        <input type="text" id="${field.name}" name="${field.name}" maxlength="60" oninput="updateSymbolCount(this)">
+        <div class="input-footer">
+          <span>Symbol Count</span>
+          <span class="symbol-count">0/60</span>
+        </div>
+      `;
+      formGrid.appendChild(group);
+    });
+
+    function updateSymbolCount(input) {
+      const counter = input.parentElement.querySelector(".symbol-count");
+      counter.textContent = `${input.value.length}/60`;
+    }
+
+    function submitAnswers() {
+      const feelingText = document.getElementById("feeling").value;
+      const wordCount = feelingText.trim().split(/\s+/).filter(Boolean).length;
+      if (wordCount >= 100) {
+        alert(`Please write fewer than 100 words. You currently have ${wordCount}.`);
+        return;
+      }
+
+      const data = {};
+      fields.forEach(field => {
+        data[field.name] = document.getElementById(field.name).value;
+      });
+      data["feeling"] = feelingText;
+      console.log("Collected answers for Python algorithm:", data);
+      // Send 'data' to your backend as needed
+    }
+  </script>
+</body>
+</html>
