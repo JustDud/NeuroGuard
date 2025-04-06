@@ -4,24 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NeuroGuard - Provide Details</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
     }
+    body::-webkit-scrollbar {
+    display: none;
+    }
+
 
     body {
       margin: 0;
       font-family: 'Orbitron', sans-serif;
-      background-color: #0f0f0f;
+      background-color: #231D28;
       color: white;
       display: flex;
-      height: 100vh;
+      height: 110vh;
     }
 
     .left-panel {
       width: 40%;
-      background-color: yellow;
+      background: #FFFF00 url(leftPanelInput.svg) center/cover no-repeat;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -31,8 +38,9 @@
 
     .left-panel h1 {
       font-size: 3em;
-      text-align: center;
       color: black;
+      font-family: Orbitron;
+      font-weight: bold;
     }
 
     .right-panel {
@@ -41,7 +49,7 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      background-color: #1a1a1a;
+      background-color: #231D28;
     }
 
     .form-grid {
@@ -66,6 +74,7 @@
       padding: 8px;
       color: #ff0057;
       font-size: 0.9em;
+      border-radius: 6px;
     }
 
     .input-footer {
@@ -114,11 +123,11 @@
     <div class="form-grid" id="input-fields"></div>
 
     <div class="textarea-group">
-      <label for="feeling">Make sure that your description is as detailed as possible</label>
-      <textarea id="feeling" placeholder="How do you feel today?"></textarea>
+      <label for="feeling">How do you feel today?</label>
+      <textarea id="feeling" placeholder="Make sure that your description is as detailed as possible"></textarea>
     </div>
 
-    <button class="submit-button" onclick="submitAnswers()">CONFIRM ANSWER</button>
+    <button class="submit-button" onclick="submitAnswers()" style="font-family: Orbitron;"><a href="index4.html" style="text-decoration: none; color: white;">CONFIRM ANSWER</a></button>
   </div>
 
   <script>
