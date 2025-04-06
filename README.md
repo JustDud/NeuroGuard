@@ -1,75 +1,73 @@
----
+# 🧠 NeuroGuard – Mental State AI Assistant
 
-## Tech Stack Overview
+## Overview
+NeuroGuard is a futuristic AI-powered system designed to evaluate and improve your mental well-being in highly digitised environments. Built using machine learning and a modern web interface, it collects lifestyle signals and predicts your mental state on a scale from 0 to 100. The backend is powered by Flask and integrates ML predictions and optional AI suggestions using Google Gemini.
 
-| Layer                | Technologies Used                                    | Purpose |
-|----------------------|------------------------------------------------------|---------|
-| **Frontend**         | HTML, CSS, JavaScript                                | Collect user input through a responsive web form |
-| **Backend**          | Flask (Python)                                       | Process user input, call ML model, and return response |
-| **Machine Learning** | scikit-learn (RandomForestRegressor)                | Predict mental state (0–100) from lifestyle input |
-| **Database**         | MySQL                                               | Store historical user data and mental state records |
-| **AI Integration**   | Google Gemini API (optional)                        | Generate context-aware suggestions |
-| **Data Handling**    | pandas, joblib, json                                | Load and save data/models, preprocess features |
-| **Automation**       | data_generator.py, ml.py                            | Generate realistic training data and train ML model |
+## Features
+- **Mental State Prediction:** Uses a trained ML model (RandomForestRegressor) to estimate mental state from input parameters.
+- **Web Interface:** Built with HTML, CSS, and JavaScript for clean user interaction.
+- **Flask Backend:** Processes form input and interacts with the machine learning model.
+- **MySQL Integration:** Stores historical data for analysis and tracking.
+- **Gemini API Integration (Optional):** Offers suggestions based on mental state and user context.
+- **Retraining Support:** CLI-based retraining using realistic sample data generated automatically.
 
----
+## Installation
 
-## Project Structure
-
-```
-neuroguard/
-├── app.py                    # Flask web server
-├── templates/
-│   └── index.html            # User-facing web form
-├── static/
-│   ├── style.css             # Web styling
-│   └── script.js             # Frontend logic
-├── ml.py                     # Machine learning training/prediction
-├── data_generator.py         # Sample data generation and scoring
-├── trained_model.pkl         # Saved model file
-├── generated_sample_data.json# Sample data with mental_state
-├── .env                      # Environment variables (API keys)
-├── README.md                 # You're reading it :)
-└── requirements.txt          # Project dependencies
+### 1. Clone the Repository
+```bash
+git clone https://github.com/YourUsername/NeuroGuard.git
 ```
 
----
+### 2. Navigate to the Project Directory
+```bash
+cd NeuroGuard
+```
 
-## Getting Started
+### 3. Create and Activate a Virtual Environment
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-### 1. Install dependencies:
-
+### 4. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Run the application:
+## Usage
 
+### 1. Start the Flask Web Server
 ```bash
 python app.py
 ```
+Then open your browser and go to: `http://localhost:5000`
 
-Then visit `http://localhost:5000` in your browser.
-
----
-
-## Retraining the Model
-
-If you wish to retrain the model from sample data:
-
+### 2. Optional: Retrain the Model
 ```bash
 python main.py
 # Type 'train' when prompted
 ```
 
+### 3. Gemini API
+Set your Gemini API key in a `.env` file:
+```plaintext
+GEMINI_API_KEY=your-api-key
+```
+
+## Technologies Used
+- **Languages:** Python, HTML, CSS, JavaScript
+- **Frameworks/Libraries:** Flask, scikit-learn, pandas, joblib, MySQL, dotenv
+- **Machine Learning:** RandomForestRegressor
+- **AI Integration:** Google Gemini API (optional)
+
+## Contributing
+We welcome contributions! To contribute:
+1. Fork the repository.
+2. Create a new feature branch.
+3. Commit your changes.
+4. Submit a pull request for review.
+
+
 ---
 
-## Model Info
-
-- Model: `RandomForestRegressor`
-- Target: Predict `mental_state` on a scale of 0–100
-- Accuracy (±10 points): ~70–80%
-- Average error (MAE): ~12–18
-- Training dataset: `generated_sample_data.json`
-
----
+*Keywords: Mental Health AI, Web App, Machine Learning, NeuroGuard, Flask, Gemini, scikit-learn*
