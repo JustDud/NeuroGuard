@@ -5,13 +5,13 @@ def generate_sample_data(n):
     data = []
     for _ in range(n):
         entry = {
-            "sunlight_hours": random.randint(1, 12),                          # реалистичное дневное освещение
-            "safety": random.randint(20, 100),                                # большинство районов хотя бы средне безопасны
-            "sleep_duration_hours": round(random.uniform(3.0, 9.5), 1),       # от недосыпа до полноценного сна
-            "screen_time_minutes": random.randint(120, 900),                 # от умеренного до чрезмерного
-            "physical_activity_minutes": random.randint(0, 120),             # от полного покоя до активного дня
-            "daily_goal_progression": random.randint(10, 100),               # от срыва до отличной продуктивности
-            "hour": random.randint(0, 23),                                   # текущий час
+            "sunlight_hours": random.randint(1, 12),
+            "safety": random.randint(20, 100),
+            "sleep_duration_hours": round(random.uniform(3.0, 9.5), 1),
+            "screen_time_minutes": random.randint(120, 900),
+            "physical_activity_minutes": random.randint(0, 120),
+            "daily_goal_progression": random.randint(10, 100),
+            "hour": random.randint(0, 23),
             "weekday": random.randint(0, 6),
             "mental_state": None
         }
@@ -64,7 +64,7 @@ def assign_mental_states(states, start_index=100):
         if idx < len(data):
             data[idx]["mental_state"] = state
         else:
-            print(f"⚠️ Index {idx} is out of range. Skipping.")
+            print(f"Index {idx} is out of range")
 
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)
@@ -86,5 +86,4 @@ if __name__ == "__main__":
 
     # Assign mental states
     # mental_states = [35, 82, 55, 42, 60, 48, 64, 52, 30, 28, 45, 25, 20, 68, 33, 22, 40, 27, 73, 26, 39, 70, 57, 42, 18, 44, 38, 60, 54, 65, 28, 36, 32, 67, 30, 59, 45, 20, 38, 48, 50, 52, 34, 28, 64, 22, 30, 70, 33, 65, 30, 58, 55, 45, 50, 25, 36, 41, 72, 33, 27, 70, 53, 42, 39, 30, 44, 50, 68, 63, 46, 40, 42, 20, 35, 60, 30, 26, 33, 45, 65, 38, 31, 28, 64, 40, 25, 20, 15, 37, 40, 33, 62, 27, 24, 30, 50, 42, 48, 65]
-
     # assign_mental_states(mental_states)

@@ -1,7 +1,7 @@
 from dotenv import load_dotenv
 import os
 import requests
-from ml import get_mental_state, retrain_model, MODEL_PATH
+from ml_model import get_mental_state, retrain_model, MODEL_PATH
 import sqlite3
 import subprocess
 from time import sleep
