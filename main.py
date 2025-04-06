@@ -5,8 +5,10 @@ from ml import get_mental_state, retrain_model, MODEL_PATH
 import sqlite3
 import subprocess
 from time import sleep
+from flask import Flask, render_template
 
 load_dotenv()
+app = Flask(__name__)
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key={GEMINI_API_KEY}"
@@ -132,6 +134,12 @@ def main():
                 suggestion_text = generate_suggestions("No message provided", predicted_state, latest_data, history_text)
                 print("AI Suggestions:\n", suggestion_text)
 
+                @app.route('/')
+                def index():
+                    input1 = predicted_state
+                    input2 = suggestion_text
+                    return render_template('plug.html', value1=input1, value2=input2)
+
                 # Generate a concise summary of today's suggestion
                 summary_prompt = (
                     f"As NeuroGuard, summarise the following AI mental wellness advice into one short paragraph "
@@ -168,7 +176,6 @@ def main():
 
                 last_seen_id = current_id
             sleep(2)
-
 
 if __name__ == "__main__":
     main()
