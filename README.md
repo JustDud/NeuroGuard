@@ -49,7 +49,30 @@ Built with machine learning and a sleek web interface, NeuroGuard collects key l
 - **Frameworks & Tools**: Flask, scikit-learn, pandas, MySQL, dotenv  
 - **AI APIs**: Google Gemini (Optional)  
 - **ML Model**: RandomForestRegressor  
-- **Data Storage**: Local or MySQL-based  
+- **Data Storage**: Local or MySQL-based
+
+---
+  
+### 🛠️ Installation Instructions:
+To get started, make sure you have **Python 3.9+** installed. Then clone the repository and install all required dependencies using the following command:
+
+```bash
+pip install -r requirements.txt
+```
+
+After that, create a `.env` file in the root directory of the project and add your **Gemini API Key** in the following format:
+
+```env
+GEMINI_API_KEY=your-gemini-api-key-here
+```
+
+Then launch the application with:
+
+```bash
+python main.py
+```
+
+---
 
 #### 🚀 Usage:
 1. Visit: `http://localhost:4000`  
